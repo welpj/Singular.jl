@@ -20,7 +20,7 @@ end
 
 const freemoduleID = ObjectIdDict()
 
-type freemodule{T <: Nemo.RingElem} <: Nemo.Module{T}
+type freemodule{T <: Nemo.RingElem} <: Nemo.Module{spoly{T}}
    rank::Int
    parent::FreeModuleClass{T}
 
@@ -41,7 +41,7 @@ end
 
 const FreeModuleMorphismModuleID = ObjectIdDict()
 
-type FreeModuleMorphismModule{T <: Nemo.RingElem} <: Nemo.Module{T}
+type FreeModuleMorphismModule{T <: Nemo.RingElem} <: Nemo.Module{spoly{T}}
    source::freemodule{T}
    target::freemodule{T}
 
@@ -54,7 +54,7 @@ type FreeModuleMorphismModule{T <: Nemo.RingElem} <: Nemo.Module{T}
    end
 end
 
-type freemodulemorphism{T <: Nemo.RingElem} <: Nemo.Module{T}
+type freemodulemorphism{T <: Nemo.RingElem} <: Nemo.Module{spoly{T}}
    images::libSingular.ideal
    parent::FreeModuleMorphismModule{T}
 
@@ -84,7 +84,7 @@ type SubquotientClass{T <: Nemo.RingElem} <: Nemo.Set
    end   
 end
 
-type subquotient{T <: Nemo.RingElem} <: Nemo.Module{T}
+type subquotient{T <: Nemo.RingElem} <: Nemo.Module{spoly{T}}
    generators::freemodulemorphism{T}
    relations::freemodulemorphism{T}
    parent::SubquotientClass{T}

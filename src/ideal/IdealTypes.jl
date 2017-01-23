@@ -18,7 +18,7 @@ type SingularIdealSet{T <: Nemo.RingElem} <: Nemo.Set
    end
 end
 
-type sideal{T <: Nemo.RingElem} <: Nemo.Module{T}
+type sideal{T <: Nemo.RingElem} <: Nemo.Module{spoly{T}}
    ptr::libSingular.ideal
    base_ring::SingularPolyRing
    isGB::Bool

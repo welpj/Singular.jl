@@ -18,7 +18,7 @@ type SingularModuleClass{T <: Nemo.RingElem} <: Nemo.Set
    end
 end
 
-type smodule{T <: Nemo.RingElem} <: Nemo.Module{T}
+type smodule{T <: Nemo.RingElem} <: Nemo.Module{spoly{T}}
    ptr::libSingular.ideal # ideal and module types are the same in Singular
    base_ring::SingularPolyRing
    isGB::Bool
@@ -50,8 +50,8 @@ end
 
 const SingularFreeModID = ObjectIdDict()
 
-type SingularFreeMod{T <: Nemo.RingElem} <: Nemo.Module{T}
-   base_ring::SingularPolyRing
+type SingularFreeMod{T <: Nemo.RingElem} <: Nemo.Module{spoly{T}}
+   base_ring::SingularPolyRing{T}
    rank::Int
 
    function SingularFreeMod(R::SingularPolyRing, r::Int)
@@ -63,10 +63,10 @@ type SingularFreeMod{T <: Nemo.RingElem} <: Nemo.Module{T}
    end
 end
 
-type svector{T <: Nemo.RingElem} <: Nemo.ModuleElem{T}
+type svector{T <: Nemo.RingElem} <: Nemo.ModuleElem{spoly{T}}
    ptr::libSingular.poly # not really a polynomial
    rank::Int
-   base_ring::SingularPolyRing
+   base_ring::SingularPolyRing{T}
 
    function svector(R::SingularPolyRing, r::Int, p::libSingular.poly)
       z = new(p, r, R)
