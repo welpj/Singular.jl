@@ -44,24 +44,9 @@ end
 
 ###############################################################################
 #
-#   SingularFreeMod/svector 
+#   svector 
 #
 ###############################################################################
-
-const SingularFreeModID = ObjectIdDict()
-
-type SingularFreeMod{T <: Nemo.RingElem} <: Nemo.Module{spoly{T}}
-   base_ring::SingularPolyRing{T}
-   rank::Int
-
-   function SingularFreeMod(R::SingularPolyRing, r::Int)
-      if haskey(SingularFreeModID, (R, r))
-         return SingularFreeModID[R, r]::SingularFreeMod{T}
-      else
-         return SingularFreeModID[R, r] = new(R, r)
-      end
-   end
-end
 
 type svector{T <: Nemo.RingElem} <: Nemo.ModuleElem{spoly{T}}
    ptr::libSingular.poly # not really a polynomial
