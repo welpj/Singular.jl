@@ -28,6 +28,12 @@ function getindex(M::smatrix, i::Int, j::Int)
    return R(libSingular.p_Copy(ptr, R.ptr))
 end
 
+function setindex!(M::smatrix, p::spoly, i::Int, j::Int)
+   ptr = libSingular.p_Copy(p.ptr, parent(p).ptr)
+   libSingular.setindex!(M.ptr, ptr, Cint(i), Cint(j))
+   nothing
+end
+
 ###############################################################################
 #
 #   String I/O 
@@ -64,4 +70,26 @@ end
 
 function SingularMatrix(I::smodule)
    return smatrix(base_ring(I), I.ptr)
+end
+
+function typed_hvcat{T <: Nemo.RingElem}(R::SingularPolyRing{T}, dims, d...)
+   r = length(dims)
+   c = dims[1]
+   A = smatrix(R, r, c)
+   for i = 1:r
+      dims[i] != c && throw(ArgumentError("row $i has mismatched number of columns (expected $c, got $(dims[i]))"))
+      for j = 1:c
+         A[i, j] = R(d[(i - 1)*c + j])
+      end
+   end 
+   return A
+end
+
+function typed_hcat{T <: Nemo.RingElem}(R::SingularPolyRing{T}, d...)
+   r = length(d)
+   A = smatrix(R, r, c)
+   for i = 1:r
+      A[1, i] = R(d[i])
+   end
+   return A
 end

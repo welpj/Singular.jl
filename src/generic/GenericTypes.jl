@@ -39,27 +39,27 @@ end
 #
 ###############################################################################
 
-const FreeModuleMorphismClassID = ObjectIdDict()
+const FreeModuleMorphismModuleID = ObjectIdDict()
 
-type FreeModuleMorphismClass{T <: Nemo.RingElem} <: Nemo.Set
+type FreeModuleMorphismModule{T <: Nemo.RingElem} <: Nemo.Module{T}
    source::freemodule{T}
    target::freemodule{T}
 
-   function FreeModuleMorphismClass(M::freemodule, N::freemodule)
-      if haskey(FreeModuleClassID, (M, N))
-         return FreeModuleClassID[M, N]
+   function FreeModuleMorphismModule(M::freemodule{T}, N::freemodule{T})
+      if haskey(FreeModuleMorphismModuleID, (M, N))
+         return FreeModuleMorphismModuleID[M, N]
       else
-         return FreeModuleClassID[M, N] = new(M, N)
+         return FreeModuleMorphismModuleID[M, N] = new(M, N)
       end
    end
 end
 
 type freemodulemorphism{T <: Nemo.RingElem} <: Nemo.Module{T}
-   images::smodule
-   parent::FreeModuleMorphismClass{T}
+   images::libSingular.ideal
+   parent::FreeModuleMorphismModule{T}
 
-   function freemodulemorphism(im::smodule)
-      z = new(im)
+   function freemodulemorphism(M::FreeModuleMorphismModule{T}, im::libSingular.ideal)
+      z = new(im, M)
       return z
    end
 end
@@ -75,7 +75,7 @@ const SubquotientClassID = ObjectIdDict()
 type SubquotientClass{T <: Nemo.RingElem} <: Nemo.Set
    base_ring::SingularPolyRing{T}
 
-   function SubquotientClass(R::SingularPolyRing)
+   function SubquotientClass(R::SingularPolyRing{T})
       if haskey(SubquotientClassID, R)
          return SubquotientClassID[R]
       else

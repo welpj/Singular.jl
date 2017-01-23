@@ -28,6 +28,14 @@ type smodule{T <: Nemo.RingElem} <: Nemo.Module{T}
       finalizer(z, _smodule_clear_fn)
       return z
    end
+
+   function smodule(R::SingularPolyRing, m::libSingular.matrix)
+      ptr = libSingular.mp_Copy(m, R.ptr)
+      ptr = libSingular.id_Matrix2Module(ptr, R.ptr)
+      z = new(ptr, R, false)
+      finalizer(z, _smodule_clear_fn)
+      return z
+   end
 end
 
 function _smodule_clear_fn(I::smodule)

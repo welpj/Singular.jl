@@ -14,7 +14,7 @@ base_ring(p::spoly) = base_ring(parent(p))
 
 elem_type{T <: Nemo.RingElem}(::SingularPolyRing{T}) = spoly{T}
 
-parent_type{T <: Nemo.RingElem}(a::spoly{T}) = SingularPolyRing{T}
+parent_type{T <: Nemo.RingElem}(a::Type{spoly{T}}) = SingularPolyRing{T}
 
 ngens(R::SingularPolyRing) = Int(libSingular.rVar(R.ptr))
 

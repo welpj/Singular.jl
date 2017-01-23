@@ -12,6 +12,8 @@ base_ring(S::FreeModuleClass) = S.base_ring
 
 base_ring(M::freemodule) = base_ring(parent(M))
 
+rank(M::freemodule) = M.rank
+
 ###############################################################################
 #
 #   String I/O

@@ -8,9 +8,13 @@ export FreeModuleMorphismClass
 
 parent(M::freemodulemorphism) = M.parent
 
-source(S::FreeModuleMorphismClass) = S.source
+source(S::FreeModuleMorphismModule) = S.source
 
-target(S::FreeModuleMorphismClass) = S.target
+source(m::freemodulemorphism) = source(parent(m))
+
+target(S::FreeModuleMorphismModule) = S.target
+
+target(m::freemodulemorphism) = target(parent(m))
 
 ###############################################################################
 #
@@ -18,14 +22,18 @@ target(S::FreeModuleMorphismClass) = S.target
 #
 ###############################################################################
 
-function show(io::IO, S::FreeModuleMorphismClass)
-   print(io, "Class of Morphisms from ")
+function show(io::IO, S::FreeModuleMorphismModule)
+   print(io, "Module of Morphisms from ")
    show(io, source(S))
    print(io, " to ")
-   show(io, target(T))
+   show(io, target(S))
 end
 
 function show(io::IO, M::freemodulemorphism)
+   R = base_ring(source(M))
+   ptr = libSingular.id_Copy(M.images, R.ptr)
+   M = SingularMatrix(SingularModule(R, ptr))
+   show(io, M)
 end
 
 ###############################################################################
@@ -34,6 +42,13 @@ end
 #
 ###############################################################################
 
-function FreeModuleMorphism{T <: Nemo.RingElem}(R::FreeModuleClass{T}, S::FreeModuleClass{T})
+function FreeModuleMorphism(m::smatrix)
+   R = base_ring(m)
+   T = elem_type(base_ring(R))
+   r = nrows(m)
+   c = ncols(m)
+   S = FreeModuleMorphismModule{T}(FreeModule(R, r), FreeModule(R, c))
+   M = SingularModule(R, m.ptr)
+   return freemodulemorphism{T}(S, M.ptr)
 end
 

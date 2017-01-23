@@ -120,6 +120,11 @@ function SingularModule{T <: Nemo.RingElem}(R::SingularPolyRing{T}, id::libSingu
    return smodule{S}(R, id)
 end
 
+function SingularModule{T <: Nemo.RingElem}(R::SingularPolyRing{T}, m::libSingular.matrix)
+   S = elem_type(R)
+   return smodule{S}(R, m)
+end
+
 # free module of rank n
 function SingularFreeModule{T <: Nemo.RingElem}(R::SingularPolyRing{T}, n::Int)
    (n > typemax(Cint) || n < 0) && throw(DomainError())

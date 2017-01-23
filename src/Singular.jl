@@ -5,7 +5,8 @@ using Cxx
 
 import Base: abs, checkbounds, deepcopy, den, div, divrem, gcd, gcdx,
              getindex, indices, inv, isequal, isless, lcm, length, mod, 
-             normalize!, num, one, rem, setindex!, show, std, zero,
+             normalize!, num, one, rank, rem, setindex!, show, std, 
+             typed_hvcat, typed_hcat, zero,
              +, -, *, ==, ^, &, |, $, <<, >>, ~, <=, >=, <, >, //,
              /, !=
 

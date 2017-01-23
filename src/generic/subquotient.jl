@@ -1,4 +1,4 @@
-export SubquotientClass, base_ring
+export SubquotientClass, Subquotient, base_ring
 
 ###############################################################################
 #
@@ -24,6 +24,11 @@ function show(io::IO, S::SubquotientClass)
 end
 
 function show(io::IO, M::subquotient)
+   println(io, "Subquotient Module with Generators:")
+   show(io, M.generators)
+   println("")
+   println(io, "and Relations:")
+   show(io, M.relations)
 end
 
 ###############################################################################
@@ -32,6 +37,7 @@ end
 #
 ###############################################################################
 
-function Subquotient{T <: Nemo.RingElem}(R::FreeModuleClass{T}, S::FreeModuleClass{T})
+function Subquotient{T <: Nemo.RingElem}(R::freemodulemorphism{T}, S::freemodulemorphism{T})
+   return subquotient{T}(R, S, SubquotientClass{T}(base_ring(target(R))))
 end
 

@@ -11,7 +11,7 @@ type SingularMatrixSpace{T <: Nemo.RingElem} <: Nemo.Set
    nrows::Int
    ncols::Int
 
-   function SingularMatrixSpace(R::SingularPolyRing, r::Int, c::Int)
+   function SingularMatrixSpace(R::SingularPolyRing{T}, r::Int, c::Int)
       if haskey(SingularMatrixSpaceID, (R, r, c))
          return SingularMatrixSpaceID[R, r, c]
       else
@@ -28,6 +28,13 @@ type smatrix <: Nemo.SetElem
    function smatrix(R::SingularPolyRing, m::libSingular.ideal)
       ptr = libSingular.id_Copy(m, R.ptr)
       ptr = libSingular.id_Module2Matrix(ptr, R.ptr)
+      z = new(ptr, R)
+      finalizer(z, _smatrix_clear_fn)
+      return z
+   end
+
+   function smatrix(R::SingularPolyRing, r::Int, c::Int)
+      ptr = libSingular.mp_New(Cint(r), Cint(c))
       z = new(ptr, R)
       finalizer(z, _smatrix_clear_fn)
       return z
