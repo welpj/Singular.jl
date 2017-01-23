@@ -29,10 +29,10 @@ function show(io::IO, S::FreeModuleMorphismModule)
    show(io, target(S))
 end
 
-function show(io::IO, M::freemodulemorphism)
+function show{T <: Nemo.RingElem}(io::IO, M::freemodulemorphism{T})
    R = base_ring(source(M))
    ptr = libSingular.id_Copy(M.images, R.ptr)
-   M = SingularMatrix(SingularModule(R, ptr))
+   M = smatrix{T}(R, ptr)
    show(io, M)
 end
 
@@ -42,13 +42,12 @@ end
 #
 ###############################################################################
 
-function FreeModuleMorphism(m::smatrix)
+function FreeModuleMorphism{T <: Nemo.RingElem}(m::smatrix{T})
    R = base_ring(m)
-   T = elem_type(base_ring(R))
    r = nrows(m)
    c = ncols(m)
    S = FreeModuleMorphismModule{T}(FreeModule(R, r), FreeModule(R, c))
-   M = SingularModule(R, m.ptr)
+   M = smodule{T}(R, m.ptr)
    return freemodulemorphism{T}(S, M.ptr)
 end
 

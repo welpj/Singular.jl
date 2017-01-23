@@ -117,6 +117,20 @@ include("AbstractTypes.jl")
 
 include("LibSingular.jl")
 
+include("number/NumberTypes.jl")
+
+include("poly/PolyTypes.jl")
+
+include("module/ModuleTypes.jl")
+
+include("ideal/IdealTypes.jl")
+
+include("matrix/MatrixTypes.jl")
+
+include("resolution/ResolutionTypes.jl")
+
+include("generic/GenericTypes.jl")
+
 include("Number.jl")
 
 include("Poly.jl")
@@ -130,8 +144,6 @@ include("Matrix.jl")
 include("Vector.jl")
 
 include("Resolution.jl")
-
-include("generic/GenericTypes.jl")
 
 include("generic/freemodule.jl")
 

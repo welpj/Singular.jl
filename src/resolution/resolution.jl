@@ -12,14 +12,14 @@ function checkbounds(r::sresolution, i::Int)
    (i < 1 || i > r.len) && throw(BoundsError(I, i))
 end
 
-function getindex(r::sresolution, i::Int)
+function getindex{T}(r::sresolution{T}, i::Int)
    checkbounds(r, i)
    R = base_ring(r)
    ptr = libSingular.getindex(r.ptr, Cint(i - 1))
    if ptr != C_NULL
       ptr = libSingular.id_Copy(ptr, R.ptr)
    end
-   return SingularModule(R, ptr)
+   return smodule{T}(R, ptr)
 end
 
 ###############################################################################

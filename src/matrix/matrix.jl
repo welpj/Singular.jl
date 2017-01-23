@@ -68,14 +68,14 @@ end
 #
 ###############################################################################
 
-function SingularMatrix(I::smodule)
-   return smatrix(base_ring(I), I.ptr)
+function SingularMatrix{T <: Nemo.RingElem}(I::smodule{T})
+   return smatrix{T}(base_ring(I), I.ptr)
 end
 
 function typed_hvcat{T <: Nemo.RingElem}(R::SingularPolyRing{T}, dims, d...)
    r = length(dims)
    c = dims[1]
-   A = smatrix(R, r, c)
+   A = smatrix{T}(R, r, c)
    for i = 1:r
       dims[i] != c && throw(ArgumentError("row $i has mismatched number of columns (expected $c, got $(dims[i]))"))
       for j = 1:c
@@ -87,7 +87,7 @@ end
 
 function typed_hcat{T <: Nemo.RingElem}(R::SingularPolyRing{T}, d...)
    r = length(d)
-   A = smatrix(R, r, c)
+   A = smatrix{T}(R, r, c)
    for i = 1:r
       A[1, i] = R(d[i])
    end

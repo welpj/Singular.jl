@@ -21,19 +21,19 @@ function checkbounds(I::smodule, i::Int)
    (i > ngens(I) || i < 1) && throw(BoundsError(I, i))
 end
 
-function getindex(I::smodule, i::Int)
+function getindex{T <: Nemo.RingElem}(I::smodule{T}, i::Int)
    checkbounds(I, i)
    R = base_ring(I)
    p = libSingular.getindex(I.ptr, Cint(i - 1))
-   return SingularVector(R, rank(I), libSingular.p_Copy(p, R.ptr))
+   return svector{T}(R, rank(I), libSingular.p_Copy(p, R.ptr))
 end
 
 iszero(p::smodule) = Bool(libSingular.idIs0(p.ptr))
 
-function deepcopy(I::smodule)
+function deepcopy{T <: Nemo.RingElem}(I::smodule{T})
    R = base_ring(I)
    ptr = libSingular.id_Copy(I.ptr, R.ptr)
-   return SingularIdeal(R, ptr)
+   return smodule{T}(R, ptr)
 end
 
 ###############################################################################
@@ -66,11 +66,11 @@ end
 #
 ###############################################################################
 
-function std(I::smodule) 
+function std{T <: Nemo.RingElem}(I::smodule{T}) 
    R = base_ring(I)
    ptr = libSingular.id_Std(I.ptr, R.ptr)
    libSingular.idSkipZeroes(ptr)
-   z = SingularModule(R, ptr)
+   z = smodule{T}(R, ptr)
    z.isGB = true
    return z
 end
@@ -115,14 +115,9 @@ end
 #
 ###############################################################################
 
-function SingularModule{T <: Nemo.RingElem}(R::SingularPolyRing{T}, id::libSingular.ideal)
+function SingularModule{T <: Nemo.RingElem}(R::SingularPolyRing{T}, m::smatrix)
    S = elem_type(R)
-   return smodule{S}(R, id)
-end
-
-function SingularModule{T <: Nemo.RingElem}(R::SingularPolyRing{T}, m::libSingular.matrix)
-   S = elem_type(R)
-   return smodule{S}(R, m)
+   return smodule{S}(R, m.ptr)
 end
 
 # free module of rank n

@@ -20,7 +20,7 @@ type SingularMatrixSpace{T <: Nemo.RingElem} <: Nemo.Set
    end
 end
 
-type smatrix <: Nemo.SetElem
+type smatrix{T <: Nemo.RingElem} <: Nemo.SetElem
    ptr::libSingular.matrix
    base_ring::SingularPolyRing
 

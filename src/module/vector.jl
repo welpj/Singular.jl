@@ -18,9 +18,9 @@ parent_type{T <: Nemo.RingElem}(v::svector{T}) = SingularFreeMod{T}
 
 rank(R::SingularFreeMod) = R.rank
 
-function deepcopy(p::svector)
+function deepcopy{T <: Nemo.RingElem}(p::svector{T})
    p2 = libSingular.p_Copy(p.ptr, parent(p).ptr)
-   return SingularVector(p.base_ring, p.rank, p2)
+   return svector{T}(p.base_ring, p.rank, p2)
 end
 
 function check_parent{T <: Nemo.RingElem}(a::svector{T}, b::svector{T})
@@ -28,7 +28,7 @@ function check_parent{T <: Nemo.RingElem}(a::svector{T}, b::svector{T})
    a.rank != b.rank && error("Vectors of incompatible rank")
 end
 
-function check_parent{T <: Nemo.RingElem}(a::svector{spoly{T}}, b::spoly{T})
+function check_parent{T <: Nemo.RingElem}(a::svector{T}, b::spoly{T})
    base_ring(a) != parent(b) && error("Incompatible base rings")
 end
 
@@ -56,11 +56,11 @@ end
 #
 ###############################################################################
 
-function -(a::svector)
+function -{T <: Nemo.RingElem}(a::svector{T})
    R = base_ring(a)
    a1 = libSingular.p_Copy(a.ptr, R.ptr)
    s = libSingular.p_Neg(a1, R.ptr)
-   return SingularVector(R, a.rank, s) 
+   return svector{T}(R, a.rank, s) 
 end
 
 ###############################################################################
@@ -75,7 +75,7 @@ function +{T <: Nemo.RingElem}(a::svector{T}, b::svector{T})
    a1 = libSingular.p_Copy(a.ptr, R.ptr)
    b1 = libSingular.p_Copy(b.ptr, R.ptr)
    s = libSingular.p_Add_q(a1, b1, R.ptr)
-   return SingularVector(R, a.rank, s) 
+   return svector{T}(R, a.rank, s) 
 end
 
 function -{T <: Nemo.RingElem}(a::svector{T}, b::svector{T})
@@ -84,7 +84,7 @@ function -{T <: Nemo.RingElem}(a::svector{T}, b::svector{T})
    a1 = libSingular.p_Copy(a.ptr, R.ptr)
    b1 = libSingular.p_Copy(b.ptr, R.ptr)
    s = libSingular.p_Sub(a1, b1, R.ptr)
-   return SingularVector(R, a.rank, s) 
+   return svector{T}(R, a.rank, s) 
 end
 
 ###############################################################################
@@ -93,20 +93,20 @@ end
 #
 ###############################################################################
 
-function *{T <: Nemo.RingElem}(a::svector{spoly{T}}, b::spoly{T})
+function *{T <: Nemo.RingElem}(a::svector{T}, b::spoly{T})
    check_parent(a, b)
    R = base_ring(a)
    a1 = libSingular.p_Copy(a.ptr, R.ptr)
    b1 = libSingular.p_Copy(b.ptr, R.ptr)
    s = libSingular.p_Mult_q(a1, b1, R.ptr)
-   return SingularVector(R, a.rank, s)
+   return svector{T}(R, a.rank, s)
 end
 
-*{T <: Nemo.RingElem}(a::spoly{T}, b::svector{spoly{T}}) = b*a
+*{T <: Nemo.RingElem}(a::spoly{T}, b::svector{T}) = b*a
 
-*{T <: Nemo.RingElem}(a::svector{spoly{T}}, b::T) = a*base_ring(a)(b)
+*{T <: Nemo.RingElem}(a::svector{T}, b::T) = a*base_ring(a)(b)
 
-*{T <: Nemo.RingElem}(a::T, b::svector{spoly{T}}) = b*a
+*{T <: Nemo.RingElem}(a::T, b::svector{T}) = b*a
 
 *(a::svector, b::Integer) = a*base_ring(a)(b)
 
@@ -129,6 +129,3 @@ end
 #
 ###############################################################################
 
-function SingularVector{T <: Nemo.RingElem}(R::SingularPolyRing{T}, r::Int, p::libSingular.poly)
-   return svector{spoly{T}}(R, r, p)
-end
