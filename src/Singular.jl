@@ -11,7 +11,7 @@ import Base: abs, checkbounds, deepcopy, den, div, divrem, gcd, gcdx,
              /, !=
 
 import Nemo: add!, addeq!, base_ring, coeff, content, crt, divexact, elem_type,
-             gcdinv, is_negative, isone, isgen, iszero, isunit, lead, mul!,
+             gcdinv, isnegative, isone, isgen, iszero, isunit, lead, mul!,
              needs_parentheses, parent_type, parent, primpart, reconstruct,
              show_minus_one, zero!, ResidueRing
 
