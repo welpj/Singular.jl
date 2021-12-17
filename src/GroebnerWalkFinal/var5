@@ -17,12 +17,13 @@ function var5()
 
   df = DataFrame(weights = ["-"], weight = ["-"], initials = ["-"], stdh=["-"], lift2=["-"], lift=["-"], interred=["-"], inCone=["-"], pertvec=["-"], depth=["-"], example =["Katsura 5"])
   savew(df, "fractalWalk.txt")
-  df = DataFrame(initials = ["-"], stdh = ["-"], liftGW2 = ["-"], lift2=["-"], interred=["-"], example=["Katsura 5"])
+  df = DataFrame(weights = ["-"], weight = ["-"], initials = ["-"], stdh=["-"], lift2=["-"], lift=["-"], interred=["-"], inCone=["-"], pertvec=["-"], depth=["-"], example =["Katsura 5"])
   savew(df, "fractalWalklex.txt")
-  df = DataFrame(initials = ["-"], stdh = ["-"], liftGW2 = ["-"], lift2=["-"], interred=["-"], example=["Katsura 5"])
+  df = DataFrame(weights = ["-"], weight = ["-"], initials = ["-"], stdh=["-"], lift2=["-"], lift=["-"], interred=["-"], inCone=["-"], pertvec=["-"], depth=["-"], example =["Katsura 5"])
   savew(df, "fractalWalklookahead.txt")
+  df = DataFrame(weights = ["-"], weight = ["-"], initials = ["-"], stdh=["-"], lift2=["-"], lift=["-"], interred=["-"], inCone=["-"], pertvec=["-"], depth=["-"], example =["Katsura 5"])
+  savew(df, "fractalWalkcombined.txt")
   df = DataFrame(weights="-",weight="-",initials = ["-"], stdh = ["-"], liftGW2 = ["-"], lift2=["-"], interred=["-"],rep = ["-"], inCone = ["-"], inseveral = ["-"], example = ["Katsura 5"])
-
   savew(df, "tranWalk.txt")
 
     dim = 5
@@ -53,15 +54,10 @@ function var5()
     end
     push!(ideals, groebnerwalk(I,StartOrd, TarOrd, :standard))
     push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :generic))
-
     push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal))
-
     push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal_look_ahead))
-
     push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal_lex))
-
     push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal_combined))
-
     push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :tran))
 
     s = Singular.std(
@@ -69,18 +65,13 @@ function var5()
         complete_reduction = true,
     )
 
-    df = DataFrame(a = ["false"], b=["false"])
-
-    open("fischi.txt", "w") do io # create a file and write with header as the file does not exist
-       foreach(row -> print(io, row), CSV.RowWriter(df))
-    end
+    df = DataFrame(a = ["test1"], b=["test2"])
+    savew(df,"correct.txt")
     for id in ideals
         a = isequal(Singular.Ideal(S, [change_ring(x, S) for x in Singular.gens(id)]), s)
         b = equalitytest(s, id)
         df = DataFrame(a = [a], b = [b])
-        open("fischi.txt", "a") do io # append to file and write without header
-                   foreach(row -> print(io, row), CSV.RowWriter(df, writeheader=false))
-               end
+        savea(df,"correct.txt")
     end
 
 end
