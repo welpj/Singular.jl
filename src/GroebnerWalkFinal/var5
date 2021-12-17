@@ -1,0 +1,86 @@
+include("GroebnerWalkFinal.jl")
+include("benchi.jl")
+using DataFrames
+using CSV
+#Katsura 7
+function var5()
+    cd("/Users/JordiWelp/Results")
+
+    df = DataFrame(weights="-",weight="-",initials = ["-"], stdh = ["-"], liftGW2 = ["-"], lift2=["-"], interred=["-"], example = ["Katsura 5"])
+    savew(df, "standardWalk.txt")
+   df = DataFrame(weights="-",weight="-",initials = ["-"], stdh = ["-"], liftGW2 = ["-"], lift2=["-"], interred=["-"],pert = ["-"], inCone = ["-"], laststd = ["-"], degree=["-"], example = ["Katsura 5"])
+
+   savew(df, "pertubedWalk.txt")
+
+  df = DataFrame(weights="-",facetnormal="-",initials = ["-"], stdh = ["-"], liftgeneric = ["-"], interred=["-"], example=["Katsura 5"])
+  savew(df, "genericWalk.txt")
+
+  df = DataFrame(weights = ["-"], weight = ["-"], initials = ["-"], stdh=["-"], lift2=["-"], lift=["-"], interred=["-"], inCone=["-"], pertvec=["-"], depth=["-"], example =["Katsura 5"])
+  savew(df, "fractalWalk.txt")
+  df = DataFrame(initials = ["-"], stdh = ["-"], liftGW2 = ["-"], lift2=["-"], interred=["-"], example=["Katsura 5"])
+  savew(df, "fractalWalklex.txt")
+  df = DataFrame(initials = ["-"], stdh = ["-"], liftGW2 = ["-"], lift2=["-"], interred=["-"], example=["Katsura 5"])
+  savew(df, "fractalWalklookahead.txt")
+  df = DataFrame(weights="-",weight="-",initials = ["-"], stdh = ["-"], liftGW2 = ["-"], lift2=["-"], interred=["-"],rep = ["-"], inCone = ["-"], inseveral = ["-"], example = ["Katsura 5"])
+
+  savew(df, "tranWalk.txt")
+
+    dim = 5
+    ve = [1, 1, 1, 1, 1]
+    StartOrd = ordering_as_matrix(ve, :lex)
+    TarOrd = ordering_as_matrix(:lex, dim)
+    R, (x1, x2, x3, x4, x5) = Singular.PolynomialRing(
+        Singular.QQ,
+        ["x1", "x2", "x3", "x4", "x5"],
+        ordering = Singular.ordering_M(StartOrd),
+    )
+    S = change_order(R, TarOrd)
+
+    gens = []
+
+    push!(gens, 2 * x5^2 + 2 * x4^2 + 2 * x3^2 + 2 * x2^2 + x1^2 - x1)
+    push!(gens, 2 * x4 * x5 + 2 * x4 * x3 + 2 * x3 * x2 + 2 * x2 * x1 - x2)
+    push!(gens, 2 * x5 * x3 + 2 * x4 * x2 + 2 * x2^2 + 2 * x3 * x1 - x3)
+    push!(gens, 2 * x5 * x2 + 2 * x3 * x2 + 2 * x4 * x1 - x4)
+    push!(gens, 2 * x5 + 2 * x4 + 2 * x3 + 2 * x2 + x1 - 1)
+
+    I = Singular.Ideal(R, [g for g in gens])
+    I = Singular.std(I, complete_reduction = true)
+
+    ideals = []
+    for i = 2:dim
+        push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :pertubed, i))
+    end
+    push!(ideals, groebnerwalk(I,StartOrd, TarOrd, :standard))
+    push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :generic))
+
+    push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal))
+
+    push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal_look_ahead))
+
+    push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal_lex))
+
+    push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal_combined))
+
+    push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :tran))
+
+    s = Singular.std(
+        Singular.Ideal(S, [change_ring(x, S) for x in Singular.gens(I)]),
+        complete_reduction = true,
+    )
+
+    df = DataFrame(a = ["false"], b=["false"])
+
+    open("fischi.txt", "w") do io # create a file and write with header as the file does not exist
+       foreach(row -> print(io, row), CSV.RowWriter(df))
+    end
+    for id in ideals
+        a = isequal(Singular.Ideal(S, [change_ring(x, S) for x in Singular.gens(id)]), s)
+        b = equalitytest(s, id)
+        df = DataFrame(a = [a], b = [b])
+        open("fischi.txt", "a") do io # append to file and write without header
+                   foreach(row -> print(io, row), CSV.RowWriter(df, writeheader=false))
+               end
+    end
+
+end

@@ -116,12 +116,12 @@ function lift(
 )
     G.isGB = true
     rest = [
-        gen - change_ring(Singular.reduce(change_ring(gen, R), G), Rn) for
-        gen in gens(H)
+        change_ring(gen, Rn) - change_ring(Singular.reduce(change_ring(gen, R), G), Rn) for
+        gen in Singular.gens(H)
     ]
-    G = Singular.Ideal(Rn, [Rn(x) for x in rest])
-    G.isGB = true
-    return G
+    Gnew = Singular.Ideal(Rn, [Rn(x) for x in rest])
+    Gnew.isGB = true
+    return Gnew
 end
 #Amrhein  & Gloor
 function liftGW2(
@@ -142,9 +142,9 @@ function liftGW2(
             gH[i] = change_ring(gH[i], R) + q[j] * gG[j]
         end
     end
-    G = Singular.Ideal(Rn, [change_ring(x, Rn) for x in gH])
-    G.isGB = true
-    return G
+    Gnew = Singular.Ideal(Rn, [change_ring(x, Rn) for x in gH])
+    Gnew.isGB = true
+    return Gnew
 end
 
 function divalg(
