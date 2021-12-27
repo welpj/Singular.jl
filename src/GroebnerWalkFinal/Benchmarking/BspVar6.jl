@@ -1,6 +1,5 @@
 include(
-  "/Users/JordiWelp/github/Singular.jl/src/GroebnerWalkFinal/GroebnerWalkFinal.jl",
-)
+"src/GroebnerWalkFinal/Benchmarking/bechmarkingEveryProcedure/GroebnerWalkFinalBenchmarkProcedures.jl")
 include("readWriteHelper.jl")
 include("parser.jl")
 include("runbenchmark.jl")

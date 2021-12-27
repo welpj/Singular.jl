@@ -1,5 +1,5 @@
 cd("/Users/JordiWelp/Results/1ideals")
-include("benchi.jl")
+include("readWriteHelper.jl")
 using CSV
 using DataFrames
 
