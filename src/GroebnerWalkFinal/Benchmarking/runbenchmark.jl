@@ -1,8 +1,8 @@
-function runb(v::String, ideal::Singular.sideal, S::Singular.PolyRing)
-    println("startig Benchmark")
+function runb(v::String, ideal::Singular.sideal, S::Singular.PolyRing,StartOrd::Matrix{Int64}, TarOrd::Matrix{Int64})
+    println("starting Benchmark")
 df = DataFrame(
         weights = ["-"],
-        weight = ["-"],
+        weight = ["-"], nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -13,7 +13,7 @@ df = DataFrame(
     savea(df, "standardWalk.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"],
+        weight = ["-"], nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -28,7 +28,7 @@ df = DataFrame(
     savea(df, "pertubedWalk2.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"],
+        weight = ["-"], nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -43,7 +43,7 @@ df = DataFrame(
     savea(df, "pertubedWalk3.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"],
+        weight = ["-"], nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -58,7 +58,7 @@ df = DataFrame(
     savea(df, "pertubedWalk4.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"],
+        weight = ["-"], nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -73,7 +73,7 @@ df = DataFrame(
     savea(df, "pertubedWalk5.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"],
+        weight = ["-"], nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -88,7 +88,7 @@ df = DataFrame(
     savea(df, "pertubedWalk6.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"],
+        weight = ["-"], nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -103,7 +103,7 @@ df = DataFrame(
     savea(df, "pertubedWalk7.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"],
+        weight = ["-"], nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -118,7 +118,7 @@ df = DataFrame(
     savea(df, "pertubedWalk8.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"],
+        weight = ["-"], nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -133,7 +133,7 @@ df = DataFrame(
     savea(df, "pertubedWalk9.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"],
+        weight = ["-"], nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -159,7 +159,7 @@ df = DataFrame(
 
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"],
+        weight = ["-"], nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         lift2 = ["-"],
@@ -173,7 +173,7 @@ df = DataFrame(
     savea(df, "fractalWalk.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"],
+        weight = ["-"], nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         lift2 = ["-"],
@@ -187,7 +187,7 @@ df = DataFrame(
     savea(df, "fractalWalklex.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"],
+        weight = ["-"], nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         lift2 = ["-"],
@@ -201,7 +201,7 @@ df = DataFrame(
     savea(df, "fractalWalklookahead.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"],
+        weight = ["-"], nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         lift2 = ["-"],
@@ -230,8 +230,9 @@ df = DataFrame(
 
 
 
-I = Singular.std(ideal, complete_reduction = true)
-for i in 2:dim
+@time I = Singular.std(ideal, complete_reduction = true)
+ideals = []
+for i in 2:nvars(S)
     push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :pertubed, i))
 end
 

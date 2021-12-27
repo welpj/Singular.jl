@@ -80,7 +80,7 @@ function ismonomial(Gw::Vector{spoly{L}})where {L<:Nemo.RingElem}
 end
 
 #returns ´true´ if all polynomials of the array are binomial or less.
-function isBinomial(Gw::Vector{spoly{L}}) where {L<:Nemo.RingElem}
+function isbinomial(Gw::Vector{spoly{L}}) where {L<:Nemo.RingElem}
     for g in Gw
         if size(collect(Singular.coefficients(g)))[1] > 2
             return false

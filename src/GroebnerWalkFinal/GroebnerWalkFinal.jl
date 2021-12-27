@@ -4,9 +4,11 @@ include("GenericWalkUtilitysFinal.jl")
 include("StandardWalkUtilitysFinal.jl")
 include("TranWalkUtilitysFinal.jl")
 using BenchmarkTools
+BenchmarkTools.DEFAULT_PARAMETERS.samples = 1
 export groebnerwalk
 a="-"
 b="-"
+z ="-"
 c="-"
 d="-"
 e="-"
@@ -30,6 +32,7 @@ function cleardf()
     global j="-"
     global k="-"
     global l="-"
+    global z ="-"
 end
 
 ###############################################################
@@ -154,7 +157,7 @@ function standard_walk(
         if cweight == tweight
             terminate = true
         else
-            global a = @elapsed next_weight(G, cweight, tweight)
+            global a = @belapsed next_weight($G, $cweight, $tweight)
             cweight = next_weight(G, cweight, tweight)
             R = Rn
             Rn = change_order(Rn, cweight, T)
@@ -169,10 +172,14 @@ function standard_step(
     cw::Vector{Int64},
     Rn::Singular.PolyRing
 )
-global c = @elapsed initials(Rn, gens(G), cw)
+global z = length(Singular.gens(G))
+
+
+global c = @belapsed initials($Rn, gens($G), $cw)
+
     Gw = initials(Rn, gens(G), cw)
-    global d= @elapsed Singular.std(
-        Singular.Ideal(Rn, Gw),
+    global d= @belapsed Singular.std(
+        Singular.Ideal($Rn, $Gw),
         complete_reduction = true,
     )
 
@@ -182,13 +189,13 @@ global c = @elapsed initials(Rn, gens(G), cw)
     )
 
 
-    global e=@elapsed liftGW2(G, R, Gw, H, Rn)
-    global f= @elapsed lift(G, R, H, Rn)
+    global e=@belapsed liftGW2($G, $R, $Gw, $H, $Rn)
+    global f= @belapsed lift($G, $R, $H, $Rn)
     #H = liftGW2(G, R, Gw, H, Rn)
     H = lift(G, R, H, Rn)
-    global g = @elapsed Singular.std(H, complete_reduction = true)
+    global g = @belapsed Singular.std($H, complete_reduction = true)
 
-    df = DataFrame(a=[a], b = [b], c = [c], d = [d], e = [e], f = [f],g=[g], h=[counter])
+    df = DataFrame(a=[a], b = [b],z=[z] c = [c], d = [d], e = [e], f = [f],g=[g], h=[counter])
     cleardf()
     savea(df,"standardWalk.txt")
     return Singular.std(H, complete_reduction = true)
@@ -218,13 +225,13 @@ while !terminate
     println(cweight)
     global b = cweight
     G = standard_step2(G, R, cweight, Rn)
-    df = DataFrame(a=[a], b = [b], c = [c], d = [d], e = [e], f=[f],g=[g],h=[h], i=[i], j =[j], k=[k],l=[l])
+    df = DataFrame(a=[a], b = [b], z=[z], c = [c], d = [d], e = [e], f=[f],g=[g],h=[h], i=[i], j =[j], k=[k],l=[l])
     cleardf()
     savea(df,"pertubedWalk.txt",k)
     if cweight == tweight
         terminate = true
     else
-        global a = @elapsed next_weight(G, cweight, tweight)
+        global a = @belapsed next_weight($G, $cweight, $tweight)
         cweight = next_weight(G, cweight, tweight)
         R = Rn
         Rn = change_order(Rn, cweight, T)
@@ -239,11 +246,14 @@ function standard_step2(
     cw::Vector{Int64},
     Rn::Singular.PolyRing
 )
-global c = @elapsed initials(Rn, gens(G), cw)
+global z = length(Singular.gens(G))
+
+
+global c = @belapsed initials($Rn, gens($G), $cw)
     Gw = initials(Rn, gens(G), cw)
 
-    global d= @elapsed Singular.std(
-        Singular.Ideal(Rn, Gw),
+    global d= @belapsed Singular.std(
+        Singular.Ideal($Rn, $Gw),
         complete_reduction = true,
     )
 
@@ -253,11 +263,11 @@ global c = @elapsed initials(Rn, gens(G), cw)
     )
 
 
-    global e=@elapsed liftGW2(G, R, Gw, H, Rn)
-    global f= @elapsed lift(G, R, H, Rn)
+    global e=@belapsed liftGW2($G, $R, $Gw, $H, $Rn)
+    global f= @belapsed lift($G, $R, $H, $Rn)
     #H = liftGW2(G, R, Gw, H, Rn)
     H = lift(G, R, H, Rn)
-    global g = @elapsed Singular.std(H, complete_reduction = true)
+    global g = @belapsed Singular.std($H, complete_reduction = true)
 
     return Singular.std(H, complete_reduction = true)
 end
@@ -268,7 +278,7 @@ end
 function generic_walk(G::Singular.sideal, S::Matrix{Int64}, T::Matrix{Int64})
     R = base_ring(G)
     Rn = change_order(G.base_ring, T)
-    global a =@elapsed next_gamma(G, [0], S, T)
+    global a =@belapsed next_gamma($G, $[0], $S, $T)
     v = next_gamma(G, [0], S, T)
     Lm = [change_ring(Singular.leading_term(g), Rn) for g in gens(G)]
     G = Singular.Ideal(Rn, [change_ring(x, Rn) for x in gens(G)])
@@ -280,10 +290,10 @@ function generic_walk(G::Singular.sideal, S::Matrix{Int64}, T::Matrix{Int64})
         global b = v
         println(v)
         G, Lm = generic_step(G, Lm, v, T,R)
-        df = DataFrame(a = [a], b = [b], c = [c], d=[d], e=[e],f=[f],g=[g])
+        df = DataFrame(a = [a], b = [b],z=[z], c = [c], d=[d], e=[e],f=[f],g=[g])
         savea(df, "genericWalk.txt")
         cleardf()
-        global a = @elapsed next_gamma(G, Lm, v, S, T)
+        global a = @belapsed next_gamma($G, $Lm, $v, $S, $T)
         v =next_gamma(G, Lm, v, S, T)
     end
     return Singular.interreduce(G)
@@ -296,21 +306,23 @@ function generic_step(
     T::Matrix{Int64},
     R::Singular.PolyRing
 ) where {L<:Nemo.RingElem}
+global z = length(Singular.gens(G))
+
 
     Rn = Singular.base_ring(G)
-    global c =@elapsed facet_initials(G,Lm, v)
+    global c =@belapsed facet_initials($G,$Lm, $v)
     facet_Generators = facet_initials(G,Lm, v)
-    global d= @elapsed Singular.std(
-        Singular.Ideal(Rn, facet_Generators),
+    global d= @belapsed Singular.std(
+        Singular.Ideal($Rn, facet_Generators),
         complete_reduction = true,
     )
     H = Singular.std(
         Singular.Ideal(Rn, facet_Generators),
         complete_reduction = true,
     )
-    global e = @elapsed lift_generic(G, Lm, H)
+    global e = @belapsed lift_generic($G, $Lm, $H)
     H, Lm = lift_generic(G, Lm, H)
-    global f= @elapsed interreduce(H, Lm)
+    global f= @belapsed interreduce($H, $Lm)
     G = interreduce(H, Lm)
     G = Singular.Ideal(Rn, G)
     G.isGB = true
@@ -328,7 +340,7 @@ function pertubed_walk(
     p::Int64,
 )
 k=p
-df = DataFrame(a=["-"], b = ["-"], c = ["-"], d = ["-"], e = ["-"], f = ["-"], g=["-"], h=["-"], i=[(p,p)], j=["-"])
+df = DataFrame(a=["-"], b = ["-"],z=["-"] c = ["-"], d = ["-"], e = ["-"], f = ["-"], g=["-"], h=["-"], i=[(p,p)], j=["-"])
 savea(df, "pertubedWalk.txt",k)
     #cweight = pertubed_vector(G, S, p)
     cweight = S[1, :]
@@ -337,25 +349,25 @@ savea(df, "pertubedWalk.txt",k)
     println("Crossed Cones in: ")
 
     while !terminate
-        global h = @elapsed pertubed_vector(G, T, p)
+        global h = @belapsed pertubed_vector($G, $T, $p)
         tweight = pertubed_vector(G, T, p)
         G = standard_walk2(G, S, T, cweight, tweight,k)
 
         if inCone(G, T, tweight)
-            global i = @elapsed inCone(G, T, tweight)
+            global i = @belapsed inCone($G, $T, $tweight)
             terminate = true
         else
             if p == 1
                 R = change_order(G.base_ring, T)
                 G = Singular.Ideal(R, [change_ring(x, R) for x in gens(G)])
-                global j= @elapsed Singular.std(G, complete_reduction = true)
+                global j= @belapsed Singular.std($G, complete_reduction = true)
                 G = Singular.std(G, complete_reduction = true)
                 terminate = true
             end
             p = p - 1
             cweight = tweight
         end
-        df = DataFrame(a=[a], b = [b], c = [c], d = [d], e = [e], f = [f], g=[g], h=[h], i=[i],j=[j],k=[k],l=[l])
+        df = DataFrame(a=[a], b = [b], z=[z],c = [c], d = [d], e = [e], f = [f], g=[g], h=[h], i=[i],j=[j],k=[k],l=[l])
         savea(df, "pertubedWalk.txt",k)
         cleardf()
     end
@@ -419,14 +431,14 @@ function fractal_recursiv(
     h= "-"
     i="-"
     while !terminate
-        a = @elapsed nextT(G, w, PertVecs[p])
+        a = @belapsed nextT($G, $w, $PertVecs[p])
         t = nextT(G, w, PertVecs[p])
         if (t == [0])
             if inCone(G, T,PertVecs[p])
-                h = @elapsed inCone(G, T,PertVecs[p])
+                h = @belapsed inCone($G, $T,$PertVecs[p])
                 return G
             else
-                i = @elapsed [pertubed_vector(G, T, i) for i = 1:nvars(R)]
+                i = @belapsed [pertubed_vector($G, $T, $i) for i = 1:nvars(R)]
                 global PertVecs = [pertubed_vector(G, T, i) for i = 1:nvars(R)]
                 continue
             end
@@ -436,11 +448,13 @@ function fractal_recursiv(
          b = w
         T.w = w
         Rn = change_order(R, T)
-         c = @elapsed initials(R, Singular.gens(G), w)
+                global z = length(Singular.gens(G))
+
+         c = @belapsed initials($R, Singular.gens($G), $w)
         Gw = initials(R, Singular.gens(G), w)
         if p == nvars(R)
-             d = @elapsed Singular.std(
-                Singular.Ideal(Rn, [change_ring(x, Rn) for x in Gw]),
+             d = @belapsed Singular.std(
+                Singular.Ideal($Rn, [change_ring(x, $Rn) for x in $Gw]),
                 complete_reduction = true,
             )
             H = Singular.std(
@@ -460,15 +474,15 @@ function fractal_recursiv(
                 p + 1,
             )
         end
-         e = @elapsed liftGW2(G, R, Gw, H, Rn)
-         f = @elapsed lift(G, R, H, Rn)
+         e = @belapsed liftGW2($G, $R, $Gw, $H, $Rn)
+         f = @belapsed lift($G, $R, $H, $Rn)
         #H = liftGW2(G, R, Gw, H, Rn)
         H = lift(G, R, H, Rn)
-         g = @elapsed Singular.std(H, complete_reduction = true)
+         g = @belapsed Singular.std($H, complete_reduction = true)
         G = Singular.std(H, complete_reduction = true)
         R = Rn
          j = p
-        df = DataFrame(a=[a], b = [b], c = [c], d = [d], e = [e], f = [f], g=[g], h=[h], i=[i],j=[j],k=[k])
+        df = DataFrame(a=[a], b = [b],z=[z], c = [c], d = [d], e = [e], f = [f], g=[g], h=[h], i=[i],j=[j],k=[k])
         savea(df,"fractalWalk.txt")
     end
     return G
@@ -519,15 +533,15 @@ function fractal_walk_recursiv_startorder(
     h= "-"
     i="-"
     while !terminate
-        a = @elapsed nextT(G, w, PertVecs[p])
+        a = @belapsed nextT($G, $w, $PertVecs[p])
         t = nextT(G, w, PertVecs[p])
         if t == [0]
             if inCone(G, T, PertVecs[p])
-                h = @elapsed inCone(G, T,PertVecs[p])
+                h = @belapsed inCone($G, $T,$PertVecs[p])
                 println(PertVecs[p], " in depth", p)
                 return G
             else
-                i = @elapsed [pertubed_vector(G, T, i) for i = 1:nvars(R)]
+                i = @belapsed [pertubed_vector($G, $T, i) for i = 1:nvars(R)]
                 global PertVecs = [pertubed_vector(G, T, i) for i = 1:nvars(R)]
                 continue
             end
@@ -538,11 +552,13 @@ function fractal_walk_recursiv_startorder(
         b = w
 
         Rn = change_order(R, T)
-        c = @elapsed initials(R, Singular.gens(G), w)
+        global z = length(Singular.gens(G))
+
+        c = @belapsed initials($R, Singular.gens($G), $w)
         Gw = initials(R, gens(G), w)
         if p == Singular.nvars(R)
-            d = @elapsed Singular.std(
-               Singular.Ideal(Rn, [change_ring(x, Rn) for x in Gw]),
+            d = @belapsed Singular.std(
+               Singular.Ideal($Rn, [change_ring(x, Rn) for x in $Gw]),
                complete_reduction = true,
            )
             H = Singular.std(
@@ -564,15 +580,15 @@ function fractal_walk_recursiv_startorder(
             )
             global firstStepMode = false
         end
-        e = @elapsed liftGW2(G, R, Gw, H, Rn)
-        f = @elapsed lift(G, R, H, Rn)
+        e = @belapsed liftGW2($G, $R, $Gw, $H, $Rn)
+        f = @belapsed lift($G, $R, $H, $Rn)
         H = liftGW2(G, R, Gw, H, Rn)
         #H = lift(G, R, H, Rn)
-        g = @elapsed Singular.std(H, complete_reduction = true)
+        g = @belapsed Singular.std($H, complete_reduction = true)
         j = p
 
         G = Singular.std(H, complete_reduction = true)
-        df = DataFrame(a=[a], b = [b], c = [c], d = [d], e = [e], f = [f], g=[g], h=[h], i=[i],j=[j],k=[k])
+        df = DataFrame(a=[a], b = [b],z=[z], c = [c], d = [d], e = [e], f = [f], g=[g], h=[h], i=[i],j=[j],k=[k])
         savea(df,"fractalWalkstartorder.txt")
         R = Rn
     end
@@ -605,14 +621,14 @@ function fractal_walk_recursive_lex(
     h= "-"
     i="-"
     while !terminate
-        a = @elapsed nextT(G, w, PertVecs[p])
+        a = @belapsed nextT($G, $w, $PertVecs[p])
         t = nextT(G, w, PertVecs[p])
         if t == [0]
             if inCone(G, T, PertVecs[p])
-                h = @elapsed inCone(G, T,PertVecs[p])
+                h = @belapsed inCone($G, $T,$PertVecs[p])
                 return G
             else
-                i = @elapsed [pertubed_vector(G, T, i) for i = 1:nvars(R)]
+                i = @belapsed [pertubed_vector($G, $T, i) for i = 1:nvars(R)]
                 global PertVecs =
                     [pertubed_vector(G, T, i) for i = 1:Singular.nvars(R)]
                     println(PertVecs)
@@ -634,11 +650,13 @@ function fractal_walk_recursive_lex(
         b = w
 
         Rn = change_order(R, T)
-        c = @elapsed initials(R, Singular.gens(G), w)
+                global z = length(Singular.gens(G))
+
+        c = @belapsed initials($R, Singular.gens($G), $w)
         Gw = initials(R, Singular.gens(G), w)
         if p == Singular.nvars(R)
-            d = @elapsed Singular.std(
-               Singular.Ideal(Rn, [change_ring(x, Rn) for x in Gw]),
+            d = @belapsed Singular.std(
+               Singular.Ideal($Rn, [change_ring(x, Rn) for x in $Gw]),
                complete_reduction = true,
            )
             H = Singular.std(
@@ -661,15 +679,15 @@ function fractal_walk_recursive_lex(
             global firstStepMode = false
         end
     end
-    e = @elapsed liftGW2(G, R, Gw, H, Rn)
-    f = @elapsed lift(G, R, H, Rn)
+    e = @belapsed liftGW2($G, $R, $Gw, $H, $Rn)
+    f = @belapsed lift($G, $R, $H, $Rn)
         H = liftGW2(G, R, Gw, H, Rn)
         #H = lift(G, R, H, Rn)
-        g = @elapsed Singular.std(H, complete_reduction = true)
+        g = @belapsed Singular.std($H, complete_reduction = true)
         j = p
 
         G = Singular.std(H, complete_reduction = true)
-        df = DataFrame(a=[a], b = [b], c = [c], d = [d], e = [e], f = [f], g=[g], h=[h], i=[i],j=[j],k=[k])
+        df = DataFrame(a=[a], b = [b],z=[z] c = [c], d = [d], e = [e], f = [f], g=[g], h=[h], i=[i],j=[j],k=[k])
         savea(df,"fractalWalklex.txt")
         R = Rn
     end
@@ -702,14 +720,14 @@ function fractal_walk_look_ahead_recursiv(
     h= "-"
     i="-"
     while !terminate
-        a = @elapsed nextT(G, w, PertVecs[p])
+        a = @belapsed nextT($G, $w, $PertVecs[p])
         t = nextT(G, w, PertVecs[p])
         if t == [0]
             if inCone(G, T, PertVecs[p])
-                h = @elapsed inCone(G, T,PertVecs[p])
+                h = @belapsed inCone($G, $T,$PertVecs[p])
                 return G
             else
-                i = @elapsed [pertubed_vector(G, T, i) for i = 1:nvars(R)]
+                i = @belapsed [pertubed_vector($G, $T, i) for i = 1:nvars(R)]
                 global PertVecs = [pertubed_vector(G, T, i) for i = 1:nvars(R)]
                 continue
             end
@@ -720,11 +738,13 @@ function fractal_walk_look_ahead_recursiv(
         b = w
 
         Rn = change_order(R, T)
-        c = @elapsed initials(R, Singular.gens(G), w)
+                global z = length(Singular.gens(G))
+
+        c = @belapsed initials($R, Singular.gens($G), $w)
         Gw = initials(R, Singular.gens(G), w)
         if (p == Singular.nvars(R) || isbinomial(Gw))
-            d = @elapsed Singular.std(
-               Singular.Ideal(Rn, [change_ring(x, Rn) for x in Gw]),
+            d = @belapsed Singular.std(
+               Singular.Ideal($Rn, [change_ring(x, Rn) for x in $Gw]),
                complete_reduction = true,
            )
             H = Singular.std(
@@ -745,15 +765,15 @@ function fractal_walk_look_ahead_recursiv(
                 p + 1,
             )
         end
-        e = @elapsed liftGW2(G, R, Gw, H, Rn)
-        f = @elapsed lift(G, R, H, Rn)
+        e = @belapsed liftGW2($G, $R, $Gw, $H, $Rn)
+        f = @belapsed lift($G, $R, $H, $Rn)
         H = liftGW2(G, R, Gw, H, Rn)
         #H = lift(G, R H, Rn)
-        g = @elapsed Singular.std(H, complete_reduction = true)
+        g = @belapsed Singular.std($H, complete_reduction = true)
         j = p
 
         G = Singular.std(H, complete_reduction = true)
-        df = DataFrame(a=[a], b = [b], c = [c], d = [d], e = [e], f = [f], g=[g], h=[h], i=[i],j=[j],k=[k])
+        df = DataFrame(a=[a], b = [b], z=[z],c = [c], d = [d], e = [e], f = [f], g=[g], h=[h], i=[i],j=[j],k=[k])
         savea(df,"fractalWalklookahead.txt")
         R = Rn
     end
@@ -801,15 +821,15 @@ function fractal_walk_combined(
     h= "-"
     i="-"
     while !terminate
-        a = @elapsed nextT(G, w, PertVecs[p])
+        a = @belapsed nextT($G, $w, $PertVecs[p])
         t = nextT(G, w, PertVecs[p])
         if t == [0]
             if inCone(G, T, PertVecs[p])
-                h = @elapsed inCone(G, T,PertVecs[p])
+                h = @belapsed inCone($G, $T,$PertVecs[p])
                 println(PertVecs[p], " in depth", p)
                 return G
             else
-                i = @elapsed [pertubed_vector(G, T, i) for i = 1:nvars(R)]
+                i = @belapsed [pertubed_vector($G, $T, i) for i = 1:nvars(R)]
                 global PertVecs = [pertubed_vector(G, T, i) for i = 1:nvars(R)]
                 continue
             end
@@ -829,11 +849,13 @@ function fractal_walk_combined(
         b = w
 
         Rn = change_order(R, T)
-        c = @elapsed initials(R, Singular.gens(G), w)
+                global z = length(Singular.gens(G))
+
+        c = @belapsed initials($R, Singular.gens($G), $w)
         Gw = initials(R, gens(G), w)
         if (p == Singular.nvars(R) || isbinomial(Gw))
-            d = @elapsed Singular.std(
-               Singular.Ideal(Rn, [change_ring(x, Rn) for x in Gw]),
+            d = @belapsed Singular.std(
+               Singular.Ideal($Rn, [change_ring(x, Rn) for x in $Gw]),
                complete_reduction = true,
            )
             H = Singular.std(
@@ -856,15 +878,15 @@ function fractal_walk_combined(
             global firstStepMode = false
         end
     end
-        e = @elapsed liftGW2(G, R, Gw, H, Rn)
-        f = @elapsed lift(G, R, H, Rn)
+        e = @belapsed liftGW2($G, $R, $Gw, $H, $Rn)
+        f = @belapsed lift($G, $R, $H, $Rn)
         H = liftGW2(G, R, Gw, H, Rn)
         #H = lift(G, R, H, Rn)
-        g = @elapsed Singular.std(H, complete_reduction = true)
+        g = @belapsed Singular.std($H, complete_reduction = true)
         j = p
 
         G = Singular.std(H, complete_reduction = true)
-        df = DataFrame(a=[a], b = [b], c = [c], d = [d], e = [e], f = [f], g=[g], h=[h], i=[i],j=[j],k=[k])
+        df = DataFrame(a=[a], b = [b],z=[z] c = [c], d = [d], e = [e], f = [f], g=[g], h=[h], i=[i],j=[j],k=[k])
         savea(df,"fractalWalkcombined.txt")
         R = Rn
     end
@@ -887,7 +909,7 @@ function tran_walk(G::Singular.sideal, S::Matrix{Int64}, T::Matrix{Int64})
 
     terminate = false
     while !terminate
-        global a = @elapsed next_weight(G, cweight, tweight)
+        global a = @belapsed next_weight($G, $cweight, $tweight)
         w = next_weight(G, cweight, tweight)
         if tryparse(Int32, string(w)) == nothing
             println("w bigger than int32")
@@ -896,12 +918,12 @@ function tran_walk(G::Singular.sideal, S::Matrix{Int64}, T::Matrix{Int64})
         Rn= change_order(R, w, T)
         if w == tweight
             if inCone(G, T, cweight)
-                global i = @elapsed inCone(G, T, cweight)
+                global i = @belapsed inCone($G, $T, $cweight)
                 return G
             else
                 if inSeveralCones(initials(base_ring(G), gens(G), w))
-                    global j = @elapsed inSeveralCones(initials(base_ring(G), gens(G), w))
-                    global h = @elapsed representation_vector(G, T)
+                    global j = @belapsed inSeveralCones(initials(base_ring($G), gens($G), $w))
+                    global h = @belapsed representation_vector($G, $T)
                     tweight = representation_vector(G, T)
                     continue
                 end
@@ -913,7 +935,7 @@ function tran_walk(G::Singular.sideal, S::Matrix{Int64}, T::Matrix{Int64})
         global b=w
         R = Rn
         cweight = w
-        df = DataFrame(a=[a], b = [b], c = [c], d = [d], e = [e], f = [f], g=[g], h=[h], i=[i],j=[j],k=[k])
+        df = DataFrame(a=[a], b = [b],z=[z], c = [c], d = [d], e = [e], f = [f], g=[g], h=[h], i=[i],j=[j],k=[k])
         savea(df,"tranWalk.txt")
         cleardf()
     end

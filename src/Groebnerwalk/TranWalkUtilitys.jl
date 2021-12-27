@@ -1,7 +1,7 @@
 include("GroebnerWalkUtilitys.jl")
 
 
-function representationVector(G::Singular.sideal, T::Matrix{Int64})
+function representation_vector(G::Singular.sideal, T::Matrix{Int64})
     n = size(T)[1]
     M = 0
     for i = 1:n

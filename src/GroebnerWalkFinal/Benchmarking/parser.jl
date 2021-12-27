@@ -1,8 +1,10 @@
-cd("/Users/JordiWelp/Results")
-
+cd("/Users/JordiWelp/Results/1ideals")
+include("benchi.jl")
+using CSV
+using DataFrames
 
 function parseideal()
-    csv_reader = CSV.File("idealsTest.txt")
+    csv_reader = CSV.File("Beispiele4Variablen.txt")
     for row in csv_reader
     poly = collect(split("$(row.generator)", ""))
     result = ""
@@ -42,6 +44,8 @@ function parseideal()
     df = DataFrame(
     generator= result
     )
-    savea(df, "convertedPoly.txt")
+    savea(df, "cBeispiele4Variablen.txt")
+    cd("/Users/JordiWelp/Results/1ideals")
+
 end
 end

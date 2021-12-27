@@ -59,7 +59,7 @@ function isparallel(u::Vector{Int64}, v::Vector{Int64})
 end
 
 #lifting step of the generic_walk
-function liftgeneric(
+function lift_generic(
     G::Singular.sideal,
     Lm::Vector{Singular.spoly{L}},
     H::Singular.sideal,

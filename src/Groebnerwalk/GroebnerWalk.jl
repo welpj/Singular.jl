@@ -193,8 +193,8 @@ function generic_step(
         complete_reduction = true,
     )
 
-    #println("liftgeneric")
-    liftArray, Newlm = liftgeneric(G, lm, facet_Ideal)
+    #println("lift_generic")
+    liftArray, Newlm = lift_generic(G, lm, facet_Ideal)
     Gnew = Singular.Ideal(S, [x for x in liftArray])
 
     #println("interred")
@@ -339,7 +339,7 @@ function fractal_recursiv(
             else
                 global P
                 #global PVecs = [pert_Vectors(P, T, 2, i) for i = 1:nvars(R)]
-                global PVecs = [representationVector(G, T.m) for i = 1:nvars(R)]
+                global PVecs = [representation_vector(G, T.m) for i = 1:nvars(R)]
 
                 println(PVecs)
                 continue
@@ -608,7 +608,7 @@ function fractal_recursiv_lookahead(
         T.w = w
         Rn, V = change_order(R, T)
         Gw = initials(R, Singular.gens(G), w)
-        if (p == Singular.nvars(R) || isBinomial(Gw))
+        if (p == Singular.nvars(R) || isbinomial(Gw))
             Gnew = Singular.std(
                 Singular.Ideal(Rn, [change_ring(x, Rn) for x in Gw]),
                 complete_reduction = true,
@@ -656,7 +656,7 @@ function tran_walk(G::Singular.sideal, S::Matrix{Int64}, T::Matrix{Int64})
                 return G
             else
                 if inSeveralCones(initials(base_ring(G),gens(G), w))
-                tweight = representationVector(G, T)
+                tweight = representation_vector(G, T)
                 continue
             end
             end
