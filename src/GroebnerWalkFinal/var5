@@ -2,29 +2,238 @@ include("GroebnerWalkFinal.jl")
 include("benchi.jl")
 using DataFrames
 using CSV
+using BenchmarkTools
 #Katsura 7
 function var5()
     cd("/Users/JordiWelp/Results")
 
-    df = DataFrame(weights="-",weight="-",initials = ["-"], stdh = ["-"], liftGW2 = ["-"], lift2=["-"], interred=["-"], example = ["Katsura 5"])
+    df = DataFrame(
+        weights = ["-"],
+        weight = ["-"],
+        initials = ["-"],
+        stdh = ["-"],
+        liftGW2 = ["-"],
+        lift2 = ["-"],
+        interred = ["-"],
+        example = ["Katsura 5"],
+    )
     savew(df, "standardWalk.txt")
-   df = DataFrame(weights="-",weight="-",initials = ["-"], stdh = ["-"], liftGW2 = ["-"], lift2=["-"], interred=["-"],pert = ["-"], inCone = ["-"], laststd = ["-"], degree=["-"], example = ["Katsura 5"])
+    df = DataFrame(
+        weights = ["-"],
+        weight = ["-"],
+        initials = ["-"],
+        stdh = ["-"],
+        liftGW2 = ["-"],
+        lift2 = ["-"],
+        interred = ["-"],
+        pert = ["-"],
+        inCone = ["-"],
+        laststd = ["-"],
+        degree = ["-"],
+        example = ["Katsura 5"],
+    )
+    savew(df, "pertubedWalk2.txt")
+    df = DataFrame(
+        weights = ["-"],
+        weight = ["-"],
+        initials = ["-"],
+        stdh = ["-"],
+        liftGW2 = ["-"],
+        lift2 = ["-"],
+        interred = ["-"],
+        pert = ["-"],
+        inCone = ["-"],
+        laststd = ["-"],
+        degree = ["-"],
+        example = ["Katsura 5"],
+    )
+    savew(df, "pertubedWalk3.txt")
+    df = DataFrame(
+        weights = ["-"],
+        weight = ["-"],
+        initials = ["-"],
+        stdh = ["-"],
+        liftGW2 = ["-"],
+        lift2 = ["-"],
+        interred = ["-"],
+        pert = ["-"],
+        inCone = ["-"],
+        laststd = ["-"],
+        degree = ["-"],
+        example = ["Katsura 5"],
+    )
+    savew(df, "pertubedWalk4.txt")
+    df = DataFrame(
+        weights = ["-"],
+        weight = ["-"],
+        initials = ["-"],
+        stdh = ["-"],
+        liftGW2 = ["-"],
+        lift2 = ["-"],
+        interred = ["-"],
+        pert = ["-"],
+        inCone = ["-"],
+        laststd = ["-"],
+        degree = ["-"],
+        example = ["Katsura 5"],
+    )
+    savew(df, "pertubedWalk5.txt")
+    df = DataFrame(
+        weights = ["-"],
+        weight = ["-"],
+        initials = ["-"],
+        stdh = ["-"],
+        liftGW2 = ["-"],
+        lift2 = ["-"],
+        interred = ["-"],
+        pert = ["-"],
+        inCone = ["-"],
+        laststd = ["-"],
+        degree = ["-"],
+        example = ["Katsura 5"],
+    )
+    savew(df, "pertubedWalk6.txt")
+    df = DataFrame(
+        weights = ["-"],
+        weight = ["-"],
+        initials = ["-"],
+        stdh = ["-"],
+        liftGW2 = ["-"],
+        lift2 = ["-"],
+        interred = ["-"],
+        pert = ["-"],
+        inCone = ["-"],
+        laststd = ["-"],
+        degree = ["-"],
+        example = ["Katsura 5"],
+    )
+    savew(df, "pertubedWalk7.txt")
+    df = DataFrame(
+        weights = ["-"],
+        weight = ["-"],
+        initials = ["-"],
+        stdh = ["-"],
+        liftGW2 = ["-"],
+        lift2 = ["-"],
+        interred = ["-"],
+        pert = ["-"],
+        inCone = ["-"],
+        laststd = ["-"],
+        degree = ["-"],
+        example = ["Katsura 5"],
+    )
+    savew(df, "pertubedWalk8.txt")
+    df = DataFrame(
+        weights = ["-"],
+        weight = ["-"],
+        initials = ["-"],
+        stdh = ["-"],
+        liftGW2 = ["-"],
+        lift2 = ["-"],
+        interred = ["-"],
+        pert = ["-"],
+        inCone = ["-"],
+        laststd = ["-"],
+        degree = ["-"],
+        example = ["Katsura 5"],
+    )
+    savew(df, "pertubedWalk9.txt")
+    df = DataFrame(
+        weights = ["-"],
+        weight = ["-"],
+        initials = ["-"],
+        stdh = ["-"],
+        liftGW2 = ["-"],
+        lift2 = ["-"],
+        interred = ["-"],
+        pert = ["-"],
+        inCone = ["-"],
+        laststd = ["-"],
+        degree = ["-"],
+        example = ["Katsura 5"],
+    )
+    savew(df, "pertubedWalk10.txt")
+    df = DataFrame(
+        weights = ["-"],
+        facetnormal = ["-"],
+        initials = ["-"],
+        stdh = ["-"],
+        liftgeneric = ["-"],
+        interred = ["-"],
+        example = ["Katsura 5"],
+    )
+    savew(df, "genericWalk.txt")
 
-   savew(df, "pertubedWalk.txt")
-
-  df = DataFrame(weights="-",facetnormal="-",initials = ["-"], stdh = ["-"], liftgeneric = ["-"], interred=["-"], example=["Katsura 5"])
-  savew(df, "genericWalk.txt")
-
-  df = DataFrame(weights = ["-"], weight = ["-"], initials = ["-"], stdh=["-"], lift2=["-"], lift=["-"], interred=["-"], inCone=["-"], pertvec=["-"], depth=["-"], example =["Katsura 5"])
-  savew(df, "fractalWalk.txt")
-  df = DataFrame(weights = ["-"], weight = ["-"], initials = ["-"], stdh=["-"], lift2=["-"], lift=["-"], interred=["-"], inCone=["-"], pertvec=["-"], depth=["-"], example =["Katsura 5"])
-  savew(df, "fractalWalklex.txt")
-  df = DataFrame(weights = ["-"], weight = ["-"], initials = ["-"], stdh=["-"], lift2=["-"], lift=["-"], interred=["-"], inCone=["-"], pertvec=["-"], depth=["-"], example =["Katsura 5"])
-  savew(df, "fractalWalklookahead.txt")
-  df = DataFrame(weights = ["-"], weight = ["-"], initials = ["-"], stdh=["-"], lift2=["-"], lift=["-"], interred=["-"], inCone=["-"], pertvec=["-"], depth=["-"], example =["Katsura 5"])
-  savew(df, "fractalWalkcombined.txt")
-  df = DataFrame(weights="-",weight="-",initials = ["-"], stdh = ["-"], liftGW2 = ["-"], lift2=["-"], interred=["-"],rep = ["-"], inCone = ["-"], inseveral = ["-"], example = ["Katsura 5"])
-  savew(df, "tranWalk.txt")
+    df = DataFrame(
+        weights = ["-"],
+        weight = ["-"],
+        initials = ["-"],
+        stdh = ["-"],
+        lift2 = ["-"],
+        lift = ["-"],
+        interred = ["-"],
+        inCone = ["-"],
+        pertvec = ["-"],
+        depth = ["-"],
+        example = ["Katsura 5"],
+    )
+    savew(df, "fractalWalk.txt")
+    df = DataFrame(
+        weights = ["-"],
+        weight = ["-"],
+        initials = ["-"],
+        stdh = ["-"],
+        lift2 = ["-"],
+        lift = ["-"],
+        interred = ["-"],
+        inCone = ["-"],
+        pertvec = ["-"],
+        depth = ["-"],
+        example = ["Katsura 5"],
+    )
+    savew(df, "fractalWalklex.txt")
+    df = DataFrame(
+        weights = ["-"],
+        weight = ["-"],
+        initials = ["-"],
+        stdh = ["-"],
+        lift2 = ["-"],
+        lift = ["-"],
+        interred = ["-"],
+        inCone = ["-"],
+        pertvec = ["-"],
+        depth = ["-"],
+        example = ["Katsura 5"],
+    )
+    savew(df, "fractalWalklookahead.txt")
+    df = DataFrame(
+        weights = ["-"],
+        weight = ["-"],
+        initials = ["-"],
+        stdh = ["-"],
+        lift2 = ["-"],
+        lift = ["-"],
+        interred = ["-"],
+        inCone = ["-"],
+        pertvec = ["-"],
+        depth = ["-"],
+        example = ["Katsura 5"],
+    )
+    savew(df, "fractalWalkcombined.txt")
+    df = DataFrame(
+        weights = "-",
+        weight = "-",
+        initials = ["-"],
+        stdh = ["-"],
+        liftGW2 = ["-"],
+        lift2 = ["-"],
+        interred = ["-"],
+        rep = ["-"],
+        inCone = ["-"],
+        inseveral = ["-"],
+        example = ["Katsura 5"],
+    )
+    savew(df, "tranWalk.txt")
 
     dim = 5
     ve = [1, 1, 1, 1, 1]
@@ -52,7 +261,7 @@ function var5()
     for i = 2:dim
         push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :pertubed, i))
     end
-    push!(ideals, groebnerwalk(I,StartOrd, TarOrd, :standard))
+    push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :standard))
     push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :generic))
     push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal))
     push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal_look_ahead))
@@ -65,13 +274,16 @@ function var5()
         complete_reduction = true,
     )
 
-    df = DataFrame(a = ["test1"], b=["test2"])
-    savew(df,"correct.txt")
+    df = DataFrame(a = ["test1"], b = ["test2"])
+    savew(df, "correct.txt")
     for id in ideals
-        a = isequal(Singular.Ideal(S, [change_ring(x, S) for x in Singular.gens(id)]), s)
+        a = isequal(
+            Singular.Ideal(S, [change_ring(x, S) for x in Singular.gens(id)]),
+            s,
+        )
         b = equalitytest(s, id)
         df = DataFrame(a = [a], b = [b])
-        savea(df,"correct.txt")
+        savea(df, "correct.txt")
     end
 
 end

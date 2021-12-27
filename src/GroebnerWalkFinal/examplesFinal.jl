@@ -1,5 +1,5 @@
 include("GroebnerWalkFinal.jl")
-
+include("Benchmarking/runbenchmark.jl")
 function test(case::Int)
 
     test_successfull = true
@@ -298,7 +298,16 @@ if case == 7 || case == 99
 
     I = Singular.Ideal(R, [f1, f2, f3, f4, f5])
     I = Singular.std(I, complete_reduction = true)
+    S, V = Singular.PolynomialRing(
+        Singular.QQ,
+        ["v", "u", "t", "z", "y"],
+        ordering = Singular.ordering_M(ordering_as_matrix(:lex, 5)),
+    )
 
+    runb("Katsura5",I, S,
+        ordering_as_matrix([1, 1, 1, 1, 1], :lex),
+            ordering_as_matrix(:lex,5))
+#=
     @time H = groebnerwalk(
         I,
         ordering_as_matrix([1, 1, 1, 1, 1], :lex),
@@ -313,13 +322,9 @@ if case == 7 || case == 99
         :fractal_look_ahead,
         5,
     )
+=#
 
 
-    S, V = Singular.PolynomialRing(
-        Singular.QQ,
-        ["v", "u", "t", "z", "y"],
-        ordering = Singular.ordering_M(ordering_as_matrix(:lex, 5)),
-    )
     T0 = Singular.Ideal(S, [change_ring(x, S) for x in gens(J)])
     T6 = Singular.Ideal(S, [change_ring(x, S) for x in gens(H)])
 
