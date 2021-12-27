@@ -1,8 +1,15 @@
-function runb(v::String, ideal::Singular.sideal, S::Singular.PolyRing,StartOrd::Matrix{Int64}, TarOrd::Matrix{Int64})
+function runb(
+    v::String,
+    ideal::Singular.sideal,
+    S::Singular.PolyRing,
+    StartOrd::Matrix{Int64},
+    TarOrd::Matrix{Int64},
+)
     println("starting Benchmark")
-df = DataFrame(
+    df = DataFrame(
         weights = ["-"],
-        weight = ["-"], nGens = ["-"],
+        weight = ["-"],
+        nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -13,7 +20,8 @@ df = DataFrame(
     savea(df, "standardWalk.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"], nGens = ["-"],
+        weight = ["-"],
+        nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -28,7 +36,8 @@ df = DataFrame(
     savea(df, "pertubedWalk2.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"], nGens = ["-"],
+        weight = ["-"],
+        nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -43,7 +52,8 @@ df = DataFrame(
     savea(df, "pertubedWalk3.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"], nGens = ["-"],
+        weight = ["-"],
+        nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -58,7 +68,8 @@ df = DataFrame(
     savea(df, "pertubedWalk4.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"], nGens = ["-"],
+        weight = ["-"],
+        nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -73,7 +84,8 @@ df = DataFrame(
     savea(df, "pertubedWalk5.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"], nGens = ["-"],
+        weight = ["-"],
+        nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -88,7 +100,8 @@ df = DataFrame(
     savea(df, "pertubedWalk6.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"], nGens = ["-"],
+        weight = ["-"],
+        nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -103,7 +116,8 @@ df = DataFrame(
     savea(df, "pertubedWalk7.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"], nGens = ["-"],
+        weight = ["-"],
+        nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -118,7 +132,8 @@ df = DataFrame(
     savea(df, "pertubedWalk8.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"], nGens = ["-"],
+        weight = ["-"],
+        nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -133,7 +148,8 @@ df = DataFrame(
     savea(df, "pertubedWalk9.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"], nGens = ["-"],
+        weight = ["-"],
+        nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         liftGW2 = ["-"],
@@ -159,7 +175,8 @@ df = DataFrame(
 
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"], nGens = ["-"],
+        weight = ["-"],
+        nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         lift2 = ["-"],
@@ -173,7 +190,8 @@ df = DataFrame(
     savea(df, "fractalWalk.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"], nGens = ["-"],
+        weight = ["-"],
+        nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         lift2 = ["-"],
@@ -187,7 +205,8 @@ df = DataFrame(
     savea(df, "fractalWalklex.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"], nGens = ["-"],
+        weight = ["-"],
+        nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         lift2 = ["-"],
@@ -201,7 +220,8 @@ df = DataFrame(
     savea(df, "fractalWalklookahead.txt")
     df = DataFrame(
         weights = ["-"],
-        weight = ["-"], nGens = ["-"],
+        weight = ["-"],
+        nGens = ["-"],
         initials = ["-"],
         stdh = ["-"],
         lift2 = ["-"],
@@ -230,37 +250,37 @@ df = DataFrame(
 
 
 
-@time I = Singular.std(ideal, complete_reduction = true)
-ideals = []
-for i in 2:nvars(S)
-    push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :pertubed, i))
-end
+    @time I = Singular.std(ideal, complete_reduction = true)
+    ideals = []
+    for i = 2:nvars(S)
+        push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :pertubed, i))
+    end
 
-push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :standard))
-push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :generic))
-push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal))
-push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal_look_ahead))
-push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal_lex))
-push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal_combined))
-push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :tran))
+    push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :standard))
+    push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :generic))
+    push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal))
+    push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal_look_ahead))
+    push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal_lex))
+    push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :fractal_combined))
+    push!(ideals, groebnerwalk(I, StartOrd, TarOrd, :tran))
 
-println("Computing GB")
-s = Singular.std(
-    Singular.Ideal(S, [change_ring(x, S) for x in Singular.gens(ideal)]),
-    complete_reduction = true,
-)
-
-df = DataFrame(test1 = ["-"], test2 = ["-"], example=[v])
-savea(df, "correct.txt")
-
-println("Benchmark ideals")
-for id in ideals
-    a = isequal(
-        Singular.Ideal(S, [change_ring(x, S) for x in Singular.gens(id)]),
-        s,
+    println("Computing GB")
+    s = Singular.std(
+        Singular.Ideal(S, [change_ring(x, S) for x in Singular.gens(ideal)]),
+        complete_reduction = true,
     )
-    b = equalitytest(s, id)
-    df = DataFrame(a = [a], b = [b])
+
+    df = DataFrame(test1 = ["-"], test2 = ["-"], example = [v])
     savea(df, "correct.txt")
-end
+
+    println("Benchmark ideals")
+    for id in ideals
+        a = isequal(
+            Singular.Ideal(S, [change_ring(x, S) for x in Singular.gens(id)]),
+            s,
+        )
+        b = equalitytest(s, id)
+        df = DataFrame(a = [a], b = [b])
+        savea(df, "correct.txt")
+    end
 end
